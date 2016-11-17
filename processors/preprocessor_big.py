@@ -145,7 +145,7 @@ main1 = """
     "num-of-epochs" : 300,
     "significance-level" : 1,
     "tv-size" : 16,
-    "tv-count" : 500,
+    "tv-count" : 1000,
 """
 
 # stream-a
@@ -208,12 +208,15 @@ if __name__ == "__main__":
             # stream-a
             f.write('    \"stream-a\" : {\n')
             f.write('        \"type\" : \"estream\",\n')
+            f.write('        \"generator\" : \"pcg32\",\n')
             f.write('        \"init-frequency\" : \"only-once\",\n')
             f.write('        \"algorithm\" : \"' + fun + '\",\n')
             f.write('        \"round\" : ' + str(r) + ',\n')
-            f.write('        \"plaintext-type\" : \"zeroes\",\n')
+            f.write("""        "plaintext-type" : {
+            "type" : "counter"
+        },\n""")
             f.write('        \"key-type\" : \"random\",\n')
-            f.write('        \"iv-type\" : \"zeroes\",\n')
+            f.write('        \"iv-type\" : \"zeros\",\n')
             f.write('    },')
 
             f.write(streamB)
@@ -232,8 +235,10 @@ if __name__ == "__main__":
 
             # stream-a
             f.write('    \"stream-a\" : {\n')
-            f.write('        \"type\" : \"sha3-stream\",\n')
-            f.write('        \"mode\" : \"counter\",\n')
+            f.write('        \"type\" : \"sha3\",\n')
+            f.write("""        "source" : {
+            "type" : "counter"
+        },\n""")
             f.write('        \"algorithm\" : \"' + fun + '\",\n')
             f.write('        \"round\" : ' + str(r) + ',\n')
             f.write('        \"hash-bitsize\" : 256\n')
