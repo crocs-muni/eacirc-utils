@@ -29,45 +29,45 @@ estream_fun_names_id = {
     'F-FCSR': 8,
     'Fubuki': 9,
     'Grain': 10,
-    'HC': 11,
+    'HC-128': 11,
     'Hermes': 12,
     'LEX': 13,
     'MAG': 14,
-    'MICKEY': 15,
+#    'MICKEY': 15, # cycles
     'Mir-1': 16,
     'Pomaranch': 17,
     'Py': 18,
     'Rabbit': 19,
     'Salsa20': 20,
-    'Sfinks': 21,
+    'SFINKS': 21,
     'SOSEMANUK': 22,
     'TEA': 23,
-    'Trivium': 24,
+#    'Trivium': 24, # not working
     'TSC-4': 25,
     'WG': 26,
-    'Yamb': 27,
+#    'Yamb': 27,
     'Zk-Crypt': 28
 }
 
 sha_fun_names_id = {
     'Abacus': 1,
     'ARIRANG': 2,
-    'Aurora': 3,
-    'Blake': 4,
+    'AURORA': 3,
+    'BLAKE': 4,
     'Blender': 5,
-    'Blue Midnight Wish': 6,
+    'BMW': 6,
     'Boole': 7,
     'Cheetah': 8,
     'CHI': 9,
     'CRUNCH': 10,
     'CubeHash': 11,
     'DCH': 12,
-    'Dynamic SHA': 13,
-    'Dynamic SHA2': 14,
+    'DynamicSHA': 13,
+    'DynamicSHA2': 14,
     'ECHO': 15,
-    'ECOH': 16,
+#    'ECOH': 16, # not working
     'EDON': 17,
-    'EnRUPT': 18,
+#    'EnRUPT': 18,
     'ESSENCE': 19,
     'Fugue': 20,
     'Grostl': 21,
@@ -75,30 +75,31 @@ sha_fun_names_id = {
     'JH': 23,
     'Keccak': 24,
     'Khichidi': 25,
-    'Lane': 26,
+    'LANE': 26,
     'Lesamnta': 27,
     'Luffa': 28,
-    'LUX': 29,
+#    'LUX': 29,
     'MCSSHA3': 30,
     'MD6': 31,
     'MeshHash': 32,
     'NaSHA': 33,
-    'SANDstorm': 34,
+#    'SANDstorm': 34,
     'Sarmal': 35,
     'Shabal': 36,
-    'Shameta': 37,
-    'SHAvite-3': 38,
+    'SHAMATA': 37,
+    'SHAvite3': 38,
     'SIMD': 39,
     'Skein': 40,
     'SpectralHash': 41,
     'StreamHash': 42,
-    'SWIFFTX': 43,
+#    'SWIFFTX': 43,
     'Tangle': 44,
-    'TIB3': 45,
+#    'TIB3': 45,
     'Twister': 46,
-    'Vortex': 47,
+#    'Vortex': 47,
     'WaMM': 48,
-    'Waterfall': 49
+    'Waterfall': 49,
+    'Tangle2': 50
 }
 
 # used funs in batch
@@ -216,7 +217,7 @@ if __name__ == "__main__":
             "type" : "counter"
         },\n""")
             f.write('        \"key-type\" : \"random\",\n')
-            f.write('        \"iv-type\" : \"zeros\",\n')
+            f.write('        \"iv-type\" : \"zeros\"\n')
             f.write('    },')
 
             f.write(streamB)
