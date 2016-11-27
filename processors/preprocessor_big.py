@@ -116,13 +116,13 @@ estream = {
 
 sha = {
     'ARIRANG': [2, 3, 4],
-    'Aurora': [2, 3, 4, 5],
-    'Blake': [0, 1, 2, 3],
+    'AURORA': [2, 3, 4, 5],
+    'BLAKE': [0, 1, 2, 3],
     'Cheetah': [4, 5, 6, 7],
     'CubeHash': [0, 1, 2, 3],
     'DCH': [1, 2, 3],
-    'Dynamic SHA': [7, 8, 9, 10, 16],
-    'Dynamic SHA2': [11, 12, 13, 14],
+    'DynamicSHA': [7, 8, 9, 10, 16],
+    'DynamicSHA2': [11, 12, 13, 14],
     'ECHO': [1, 2, 3, 4],
     'Grostl': [2, 3, 4, 5],
     'Hamsi': [0, 1, 2, 3],
