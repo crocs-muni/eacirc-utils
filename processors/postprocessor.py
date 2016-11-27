@@ -5,6 +5,7 @@
 
 
 import os, sys # traveling trough files tree
+import glob # glob for faster directory traversal
 from time import gmtime, strftime # for logging
 import argparse
 from math import sqrt # in KS test
@@ -110,6 +111,49 @@ def process_experiment(experiment_path):
     print("") # newline
 
 
+# 
+def process_experiment_stdout(experiment_path):
+    print("Processing experiment with path: " + str(experiment_path))
+
+    # EACirc 2.0+ statistics
+    accepted_count = 0
+    rejected_count = 0
+    others = 0
+
+    # EACirc 4.0+ statistics
+    p_vals = []
+
+    for f in glob.glob(experiment_path + "/*.o*"):
+        try:
+            log = open(f)
+        except IOError:
+            print("    Error: file " + f + " missing.")
+            continue
+
+        for line in log:
+            if rej_acc_keywords in line:
+                if nonuniformity_keyword in line:
+                    rejected_count += 1
+                elif uniformity_keyword in line:
+                    accepted_count += 1
+                else:
+                    others += 1
+
+            if statistics_keywords in line:
+                # get p-val from end of the string (separated by ' ')
+                # and convert it to float, inserting to p_vals
+                p_vals.append(float(line.split()[-1]))
+
+    if accepted_count + rejected_count > 0:
+        print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others) + " ratio: " + str(rejected_count / float(accepted_count + rejected_count)))
+    else:
+        print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others))
+
+    if len(p_vals) > 35: # we need more than 35 p-vals to run KS-test (but much more is recommended)
+        run_p_val_stat(p_vals)
+    print("") # newline
+
+
 # Traverse given subtree for experiments and analyse them
 def process_all_exp_in_dir(root):
     for d, _, _ in os.walk(root):
@@ -124,21 +168,23 @@ if __name__ == "__main__":
     parser.add_argument('paths', metavar='PATH', type=str, nargs='+', help='path(s) for analysis')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('-p', '--paths', dest='scan_paths', action='store_true', default=False, help='paths for analysis')
+    group.add_argument('-s', '--stdout', dest='scan_stdout', action='store_true', default=False, help='paths with stdout *.o* files')
     group.add_argument('-r', '--root', dest='scan_root', action='store_true', default=False, help='root path where this start searching for experiments')
 
     if len(sys.argv) < 2:
         sys.argv.append("-h")
     args = parser.parse_args()
 
-    if args.scan_paths == args.scan_root:
-        print('Choose EITHER --paths or --root')
-        exit(1)
-
     # correct input
     if args.scan_paths:
         print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing paths: " + str(args.paths))
         for p in args.paths:
             process_experiment(p)
+    if args.scan_stdout:
+        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing stdout in paths: " + str(args.paths))
+        # os.chdir(experiment_path) # todo: analyze, if this is needed
+        for p in args.paths:
+            process_experiment_stdout(p)
     elif args.scan_root:
         print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing path: " + str(args.paths[0]))
         process_all_exp_in_dir(args.paths[0])
