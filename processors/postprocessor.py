@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# version 1.0
+# version 1.1
 # constants fixed for EACirc 4
 
 
