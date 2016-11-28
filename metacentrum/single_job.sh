@@ -61,8 +61,8 @@ SCRATCH_RESULTSDIR=$SCRATCHDIR/results
 # prepare the binary
 if [ ! -x $EACIRC_BINDIR/$EACIRC_BINARY ]
 then
-	echo "error: binary file does not exist or is not executable ("$EACIRC_RUNDIR/$EACIRC_BINARY")"
-	exit -1
+    echo "error: binary file does not exist or is not executable ("$EACIRC_RUNDIR/$EACIRC_BINARY")"
+    exit -1
 fi
 mkdir -p $SCRATCH_RUNDIR
 cp $EACIRC_BINDIR/$EACIRC_BINARY $SCRATCH/
@@ -71,8 +71,8 @@ mkdir -p $SCRATCH_RESULTSDIR
 # prepare the configuration file
 if [ ! -f $EACIRC_DATADIR/$EACIRC_CONFIG ]
 then
-	echo "error: configuration file does not exist ("$EACIRC_DATADIR/$EACIRC_CONFIG")"
-	exit -1
+    echo "error: configuration file does not exist ("$EACIRC_DATADIR/$EACIRC_CONFIG")"
+    exit -1
 fi
 cp $EACIRC_DATADIR/$EACIRC_CONFIG $SCRATCH/
 
@@ -80,20 +80,20 @@ cp $EACIRC_DATADIR/$EACIRC_CONFIG $SCRATCH/
 cd $SCRATCH_RUNDIR
 for RUN in `seq -f %05g $EACIRC_RUNS_BEGIN $(($EACIRC_RUNS_BEGIN + EACIRC_RUNS - 1))`
 do
-	# prepare binary and config
-	cp ../$EACIRC_BINARY .
-	cp ../$EACIRC_CONFIG .
-	# run computation (suppress output log to releave MetaCentrum outfile handling)
-	./$EACIRC_BINARY --config=$EACIRC_CONFIG &>eacirc.log
-	cat eacirc.log
-	# copy results
-	mkdir -p $SCRATCH_RESULTSDIR/$RUN
-	# iterate through all output files
-	for FILE in ${!EACIRC_OUTFILES[@]}
-	do
-		cp $FILE $SCRATCH_RESULTSDIR/$RUN/${EACIRC_OUTFILES[$FILE]}_$FILE 2>/dev/null
-	done
-	rm -f *
+    # prepare binary and config
+    cp ../$EACIRC_BINARY .
+    cp ../$EACIRC_CONFIG .
+    # run computation (suppress output log to releave MetaCentrum outfile handling)
+    ./$EACIRC_BINARY --config=$EACIRC_CONFIG &>eacirc.log
+    cat eacirc.log
+    # copy results
+    mkdir -p $SCRATCH_RESULTSDIR/$RUN
+    # iterate through all output files
+    for FILE in ${!EACIRC_OUTFILES[@]}
+    do
+        cp $FILE $SCRATCH_RESULTSDIR/$RUN/${EACIRC_OUTFILES[$FILE]}_$FILE 2>/dev/null
+    done
+    rm -f *
 done
 
 # ===== EACirc job outro =====
