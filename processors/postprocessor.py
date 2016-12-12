@@ -60,7 +60,7 @@ def run_p_val_stat(p_vals):
     p_val, critical_val, rej = ks_uniform_test(p_vals)
     print("KS critical val = " + str(critical_val))
     if rej:
-        print("KS of experiment p-vals is in 1% interval -> uniformity hypothesis rejected, p-val = " + str(p_val))
+        print("KS of experiment p-vals is in 1% interval -> uniformity hypothesis rejected, ks-val = " + str(p_val))
     else:
         print("KS of experiment p-vals is not in 1% interval -> is uniform, KS-val = " + str(p_val))
 

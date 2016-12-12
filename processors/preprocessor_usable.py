@@ -47,10 +47,10 @@ class Fun_args:
 
 block = {
     'TEA': Fun_args([3, 4, 5, 6], 8, 16), # 4 is max
-    'AES': Fun_args([1, 2, 3, 4], 16, 16), # 2-3 is max
+    'AES': Fun_args([1, 2, 3, 4], 16, 16), # 3 is max
     'RC4': Fun_args([1], 16, 16), # RC4 is not round based :(
-    'SINGLE-DES': Fun_args([i for i in range(0, 15)], 8, 8),
-    'TRIPLE-DES': Fun_args([i for i in range(0, 15)], 8, 24)
+    'SINGLE-DES': Fun_args([3, 4, 5, 6], 8, 8),
+    'TRIPLE-DES': Fun_args([2, 3, 4, 5], 8, 24)
 }
 
 header = """{
