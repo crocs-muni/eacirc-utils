@@ -36,7 +36,7 @@ EACIRC_RUNS_BEGIN=${EACIRC_RUNS_BEGIN:-1}
 # ===== EACirc constants and locations =====
 # files to copy at the end along with IDs stored in associative array
 declare -A EACIRC_OUTFILES
-EACIRC_OUTFILES=( [config.json]=00 [eacirc.log]=01 [scores.txt]=02 [pvals.txt]=03 )
+EACIRC_OUTFILES=( [config.json]=00 [eacirc.log]=01 [pvals.txt]=02 ) # [scores.txt]=03
 # root EACirc NFS location
 EACIRC_ROOT=/storage/brno2/home/mukrop/eacirc
 # network directory with binaries
