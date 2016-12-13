@@ -36,7 +36,7 @@ EACIRC_RUNS_BEGIN=${EACIRC_RUNS_BEGIN:-1}
 # ===== EACirc constants and locations =====
 # files to copy at the end along with IDs stored in associative array
 declare -A EACIRC_OUTFILES
-EACIRC_OUTFILES=( [config.json]=00 [eacirc.log]=01 [pvals.txt]=02 ) # [scores.txt]=03
+EACIRC_OUTFILES=( [config.json]=00 [eacirc.log]=01 [pvals.txt]=02 ) # [scores.txt]=03 # add this if you want to inspect p-vals during epoch
 # root EACirc NFS location
 EACIRC_ROOT=/storage/brno2/home/mukrop/eacirc
 # network directory with binaries
@@ -78,6 +78,7 @@ cp $EACIRC_DATADIR/$EACIRC_CONFIG $SCRATCH/
 
 # ===== actual computation =====
 cd $SCRATCH_RUNDIR
+#                   05 = max 10^5 runs per experiment
 for RUN in `seq -f %05g $EACIRC_RUNS_BEGIN $(($EACIRC_RUNS_BEGIN + EACIRC_RUNS - 1))`
 do
     # prepare binary and config
