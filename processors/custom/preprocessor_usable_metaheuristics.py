@@ -83,7 +83,7 @@ backend1 = """
             "internal" : "simulated-annealing",
             "initial-temperature" : 500,
             "cooling-ratio" : 0.9
-        }
+        },
 
         "function-set" : [ "NOP", "CONS", "NOT",
                            "AND", "NAND", "OR", "XOR", "NOR",
