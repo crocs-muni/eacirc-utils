@@ -85,7 +85,7 @@ do
     cp ../$EACIRC_BINARY .
     cp ../$EACIRC_CONFIG .
     # run computation (suppress output log to releave MetaCentrum outfile handling)
-    ./$EACIRC_BINARY --config=$EACIRC_CONFIG &>eacirc.log
+    ./$EACIRC_BINARY --config=$EACIRC_CONFIG --no-pvals &>eacirc.log # --no-pvals do not produce p-vals.txt
     cat eacirc.log
     # copy results
     mkdir -p $SCRATCH_RESULTSDIR/$RUN
