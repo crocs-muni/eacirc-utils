@@ -22,11 +22,11 @@ import os
 # USE exactly the string from estream_fun_names_id or worry about ID's of funs!
 estream = {
     'Grain': [2, 3, 4],
-    'HC-128': [i for i in range(0, 5)],
+    'HC-128': [i for i in range(0, 2)],
 #    'MICKEY': [i for i in range(0, 10)],
-    'Rabbit': [i for i in range(0, 5)],
+    'Rabbit': [i for i in range(0, 2)],
     'Salsa20': [2, 3, 4],
-    'SOSEMANUK': [i for i in range(0, 5)]#,
+    'SOSEMANUK': [i for i in range(0, 2)]#,
 #    'Trivium': [i for i in range(0, 10)]
 }
 
@@ -34,7 +34,7 @@ sha = {
     'BLAKE': [0, 1, 2, 3],
     'Grostl': [2, 3, 4, 5],
     'JH': [6, 7, 8],
-    'Keccak': [i for i in range(1, 10)],
+    'Keccak': [i for i in range(1, 5)],
     'MD6': [8, 9, 10, 11],
     'Skein': [0] # skein is not round based :(
 }
