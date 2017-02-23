@@ -16,7 +16,7 @@ rej_acc_keywords = "% interval"
 uniformity_keyword = "uniformity hypothesis accepted"
 nonuniformity_keyword = "uniformity hypothesis rejected"
 
-statistics_keywords = "last p-value is:"
+statistics_keywords = "The p-value of the last individual is:"
 
 
 # Log both to file postprocessor.log and stdout
@@ -111,6 +111,17 @@ def process_experiment(experiment_path):
     print("") # newline
 
 
+class Result:
+    def __init__(self, fun_name, rounds, rej, total):
+        self.fun_name = fun_name
+        self.rounds = rounds
+        self.rej = rej
+        self.total = total
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
+
+results = []
+
 # 
 def process_experiment_stdout(experiment_path):
     print("Processing experiment with path: " + str(experiment_path))
@@ -148,6 +159,11 @@ def process_experiment_stdout(experiment_path):
         print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others) + " ratio: " + str(rejected_count / float(accepted_count + rejected_count)))
     else:
         print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others))
+
+    # store the results for results printout postprocessing
+    fun_name = experiment_path.split("_")[-2]
+    rounds = int(experiment_path.split("_")[-1].strip("r"))
+    results.append(Result(fun_name, rounds, rejected_count, accepted_count + rejected_count + others).__dict__)
 
     if len(p_vals) > 35: # we need more than 35 p-vals to run KS-test (but much more is recommended)
         run_p_val_stat(p_vals)
@@ -188,4 +204,6 @@ if __name__ == "__main__":
     elif args.scan_root:
         print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing path: " + str(args.paths[0]))
         process_all_exp_in_dir(args.paths[0])
+
+    
     exit(1)
