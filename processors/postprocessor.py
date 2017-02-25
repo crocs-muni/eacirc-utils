@@ -118,8 +118,6 @@ class Result:
         self.rounds = rounds
         self.rej = rej
         self.total = total
-    def __init__(self, **entries):
-        self.__dict__.update(entries)
 
 results = []
 
@@ -166,9 +164,9 @@ def process_experiment_stdout(experiment_path):
     fun_name = filename
     rounds = 0
     if filename != 'rnd_rnd':
-        fun_name = strip_filetype.split("_")[-2]
-        rounds = int(experiment_path.split("_")[-1].strip("r"))
-    results.append(Result(fun_name, rounds, rejected_count, accepted_count + rejected_count + others).__dict__)
+        fun_name = filename.split("_")[-2]
+        rounds = int(filename.split("_")[-1].strip("r"))
+    results.append((Result(fun_name, rounds, rejected_count, accepted_count + rejected_count + others)).__dict__)
 
     if len(p_vals) > 35: # we need more than 35 p-vals to run KS-test (but much more is recommended)
         run_p_val_stat(p_vals)
