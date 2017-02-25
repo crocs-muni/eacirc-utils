@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-# version 1.1
-# constants fixed for EACirc 4
+# version 1.2
+# constants fixed for EACirc 4.1
 
 
 import os, sys # traveling trough files tree
@@ -66,52 +66,6 @@ def run_p_val_stat(p_vals):
         print("KS of experiment p-vals is not in 1% interval -> is uniform, KS-val = " + str(p_val))
 
 
-#
-def process_experiment(experiment_path):
-    print("Processing experiment with path: " + str(experiment_path))
-
-    # EACirc 2.0+ statistics
-    accepted_count = 0
-    rejected_count = 0
-    others = 0
-
-    # EACirc 4.0+ statistics
-    p_vals = []
-
-    for run, _, _ in os.walk(experiment_path):
-        if run is experiment_path:
-            continue
-        log_path = run + "/" + eacirc_log_name
-        try:
-            log = open(log_path)
-        except IOError:
-            print("    Error: file " + log_path + " missing.")
-            continue
-
-        for line in log:
-            if rej_acc_keywords in line:
-                if nonuniformity_keyword in line:
-                    rejected_count += 1
-                elif uniformity_keyword in line:
-                    accepted_count += 1
-                else:
-                    others += 1
-
-            if statistics_keywords in line:
-                # get p-val from end of the string (separated by ' ')
-                # and convert it to float, inserting to p_vals
-                p_vals.append(float(line.split()[-1]))
-
-    if accepted_count + rejected_count > 0:
-        print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others) + " ratio: " + str(rejected_count / float(accepted_count + rejected_count)))
-    else:
-        print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others))
-
-    if len(p_vals) > 35: # we need more than 35 p-vals to run KS-test (but much more is recommended)
-        run_p_val_stat(p_vals)
-    print("") # newline
-
-
 class Result:
     def __init__(self, fun_name, rounds, rej, total):
         self.fun_name = fun_name
@@ -173,22 +127,13 @@ def process_experiment_stdout(experiment_path):
     print("") # newline
 
 
-# Traverse given subtree for experiments and analyse them
-def process_all_exp_in_dir(root):
-    for d, _, _ in os.walk(root):
-        if d.endswith(".d"): # experiments ends with ".d"
-            process_experiment(d)
-
-
 if __name__ == "__main__":
     # arg parser
     parser = argparse.ArgumentParser(description='Process EACirc results (from e.g. metacentrum).',
-        epilog='Prints and log (to ./postprocessor.log) ratio of experiments with rejected null hypothesis (~alpha (0.01) for rnd-rnd) and in case of experiments with last fitness also average of these fitnesses (~0.5 for rnd-rnd)')
+        epilog='Aggregate EACirc data from metacentrum and prints them to stdout and to file res.table, that can be further processed by table_generator.py.')
     parser.add_argument('paths', metavar='PATH', type=str, nargs='+', help='path(s) for analysis')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-p', '--paths', dest='scan_paths', action='store_true', default=False, help='paths for analysis')
-    group.add_argument('-s', '--stdout', dest='scan_stdout', action='store_true', default=False, help='paths with stdout *.o* files')
-    group.add_argument('-r', '--root', dest='scan_root', action='store_true', default=False, help='root path where this start searching for experiments')
+    group.add_argument('-s', '--stdout', dest='scan_stdout', action='store_true', default=False, help='paths with stdout *.o* files (-s  ./*.d/)')
 
     if len(sys.argv) < 2:
         sys.argv.append("-h")
