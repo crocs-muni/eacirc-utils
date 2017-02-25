@@ -162,8 +162,12 @@ def process_experiment_stdout(experiment_path):
         print("    Results: rejected: " + str(rejected_count) + " of: " + str(accepted_count + rejected_count + others))
 
     # store the results for results printout postprocessing
-    fun_name = experiment_path.split("_")[-2]
-    rounds = int(experiment_path.split("_")[-1].strip("r"))
+    filename = experiment_path.split("/")[-2].split(".")[-3]
+    fun_name = filename
+    rounds = 0
+    if filename != 'rnd_rnd':
+        fun_name = strip_filetype.split("_")[-2]
+        rounds = int(experiment_path.split("_")[-1].strip("r"))
     results.append(Result(fun_name, rounds, rejected_count, accepted_count + rejected_count + others).__dict__)
 
     if len(p_vals) > 35: # we need more than 35 p-vals to run KS-test (but much more is recommended)
