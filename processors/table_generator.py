@@ -112,10 +112,13 @@ if __name__ == "__main__":
         epilog='Opens pickled file and generates tables for presentation.')
     parser.add_argument('-i', '--in', dest='inf', type=str, help='path to file res.table prom postprocessor.py')
     parser.add_argument('-o', '--out', dest='outf', type=str, help='output path')
+    parser.add_argument('-c', '--criticalValue', dest='crit', type=float, default=crit_val, help='output path')
 
     if len(sys.argv) < 2:
         sys.argv.append("-h")
     args = parser.parse_args()
+
+    crit_val = args.crit
 
     with open(args.inf, 'r') as res:
         results = pickle.load(res)
