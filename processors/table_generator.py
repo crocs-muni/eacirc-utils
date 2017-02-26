@@ -71,6 +71,9 @@ def print_tex_table(results, of):
     p_rounds = max_cells
 
     of.write(header)
+    of.write(r'rnd\_rnd     & \fn{}'
+    of.write(str(crit_val))
+    of.write(r' & --    & --    & --    & --    & --    & --    & --    & --    & --    & --   \\')
     
     for res in results:
         if res['rounds'] > max_cells:
