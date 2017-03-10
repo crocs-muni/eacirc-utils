@@ -46,7 +46,7 @@ def get_tv_size():
     if FLAGS.stream_type == "sha3":
         return 32
     if FLAGS.stream_type == "block":
-        return block[fun].block_size
+        return block[FLAGS.fun].block_size
     return 16
 
 def generate():
