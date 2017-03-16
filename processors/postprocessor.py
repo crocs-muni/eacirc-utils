@@ -9,7 +9,7 @@ import glob # glob for faster directory traversal
 from time import gmtime, strftime # for logging
 import argparse
 from math import sqrt # in KS test
-import pickle # for storing the results
+import json # for storing the results
 
 # Constants (change them properly for current EACirc):
 eacirc_log_name = "01_eacirc.log"
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing path: " + str(args.paths[0]))
         process_all_exp_in_dir(args.paths[0])
 
-    with open("res.table", 'w') as res:
-        pickle.dump(results, res)
+    with open("res.json", 'w') as res:
+        json.dump(results, res)
 
     exit(1)

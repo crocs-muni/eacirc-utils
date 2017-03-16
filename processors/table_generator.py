@@ -124,7 +124,7 @@ if __name__ == "__main__":
     crit_val = args.crit
 
     with open(args.inf, 'r') as res:
-        results = pickle.load(res)
+        results = json.load(res)
 
     with open(args.outf, 'w') as of:
         print_tex_table(results, of)
