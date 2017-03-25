@@ -4,7 +4,7 @@ from __future__ import division
 
 import argparse
 import sys
-import pickle # for storing the results
+import json # for storing the results
 
 class Result:
     def __init__(self, fun_name, rounds, rej, total):
