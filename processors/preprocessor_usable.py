@@ -36,7 +36,7 @@ sha = {
     'JH': [6, 7, 8],
     'Keccak': [i for i in range(1, 5)],
     'MD6': [8, 9, 10, 11],
-    'Skein': [0] # skein is not round based :(
+    'Skein': [2, 3, 4, 5]
 }
 
 class Fun_args:
