@@ -40,7 +40,7 @@ do
     do
         # for settings of custom variables, see eacirc.sh job script
         qsub -N $CONFIG-$RUN \
-                     -l walltime="$(($FULLTIME / $PARTS))h" \
+                     -l walltime="$(($FULLTIME / $PARTS)):00:00" \
                      -v EACIRC_RUNS=$(($EACIRC_RUNS / $PARTS)),EACIRC_RUNS_BEGIN=$EACIRC_RUNS_BEGIN,EACIRC_CONFIG=$CONFIG \
                      ~/eacirc-utils/metacentrum/single_job.sh
         EACIRC_RUNS_BEGIN="$(($EACIRC_RUNS_BEGIN + $EACIRC_RUNS / $PARTS))"

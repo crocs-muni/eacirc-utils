@@ -3,15 +3,9 @@
 # name of the PBS job
 #PBS -N EACirc
 # number of nodes with specification (1 node, 1 processor per node), :gpu=1
-#PBS -l nodes=1:ppn=1:debian8
+#PBS -l select=1:ncpus=1:mem=200mb:scratch_local=1gb
 # # queue for gpu runs: -q gpu or -q gpu_long
 # caps(pbs) -q gpu
-# maximum "wall" running time (actual CPU time is less)
-#PBS -l walltime=2h
-# maximum RAM usage
-#PBS -l mem=200mb
-# maximum scratch usage (fast local disk)
-#PBS -l scratch=5gb
 # email notification at the Beginning, Abortion and End
 #PBS -m a
 
