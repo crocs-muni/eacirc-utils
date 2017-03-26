@@ -71,7 +71,7 @@ def print_tex_table(results, of):
     p_rounds = max_cells
 
     of.write(header)
-    of.write(r'rnd\_rnd     & \fn{}'
+    of.write(r'rnd\_rnd     & \fn{}')
     of.write(str(crit_val))
     of.write(r' & --    & --    & --    & --    & --    & --    & --    & --    & --    & --   \\')
     
@@ -111,14 +111,17 @@ def print_tex_table(results, of):
 
 if __name__ == "__main__":
     # arg parser
-    parser = argparse.ArgumentParser(description='Process EACirc results outputet by postprocessor.py.',
-        epilog='Opens pickled file and generates tables for presentation.')
-    parser.add_argument('-i', '--in', dest='inf', type=str, help='path to file res.table prom postprocessor.py')
+    parser = argparse.ArgumentParser(description='Process EACirc results output by postprocessor.py.',
+        epilog='Opens json file and generates tables for presentation.')
+    parser.add_argument('-i', '--in', dest='inf', type=str, help='path to file res.json from postprocessor.py')
     parser.add_argument('-o', '--out', dest='outf', type=str, help='output path')
     parser.add_argument('-c', '--criticalValue', dest='crit', type=float, default=crit_val, help='output path')
 
     if len(sys.argv) < 2:
         sys.argv.append("-h")
+        args = parser.parse_args()
+        exit(1)
+
     args = parser.parse_args()
 
     crit_val = args.crit
@@ -129,4 +132,4 @@ if __name__ == "__main__":
     with open(args.outf, 'w') as of:
         print_tex_table(results, of)
         
-    exit(1)
+    exit(0)
