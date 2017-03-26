@@ -131,27 +131,17 @@ if __name__ == "__main__":
     # arg parser
     parser = argparse.ArgumentParser(description='Process EACirc results (from e.g. metacentrum).',
         epilog='Aggregate EACirc data from metacentrum and prints them to stdout and to file res.table, that can be further processed by table_generator.py.')
+    parser.add_argument('-s', '--stdout', dest='scan_stdout', action='store_true', default=False, help='paths with stdout *.o* files (-s  ./*.d/)')
     parser.add_argument('paths', metavar='PATH', type=str, nargs='+', help='path(s) for analysis')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-s', '--stdout', dest='scan_stdout', action='store_true', default=False, help='paths with stdout *.o* files (-s  ./*.d/)')
 
     if len(sys.argv) < 2:
         sys.argv.append("-h")
     args = parser.parse_args()
 
-    # correct input
-    if args.scan_paths:
-        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing paths: " + str(args.paths))
-        for p in args.paths:
-            process_experiment(p)
-    if args.scan_stdout:
-        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing stdout in paths: " + str(args.paths))
-        # os.chdir(experiment_path) # todo: analyze, if this is needed
-        for p in args.paths:
-            process_experiment_stdout(p)
-    elif args.scan_root:
-        print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing path: " + str(args.paths[0]))
-        process_all_exp_in_dir(args.paths[0])
+    print(strftime("%Y-%m-%d %H:%M:%S", gmtime()) + ": analyzing stdout in paths: " + str(args.paths))
+    # os.chdir(experiment_path) # todo: analyze, if this is needed
+    for p in args.paths:
+        process_experiment_stdout(p)
 
     with open("res.json", 'w') as res:
         json.dump(results, res)
