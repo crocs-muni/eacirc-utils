@@ -9,21 +9,21 @@ import argparse
 estream = [
     'Grain',
     'HC-128',
-#    'MICKEY',
+#   'MICKEY',
     'Rabbit',
     'Salsa20',
-    'SOSEMANUK',
-#    'Trivium'
+    'SOSEMANUK'
+#   ,'Trivium'
 ]
 
-sha = {
+sha = [
     'BLAKE',
     'Grostl',
     'JH',
     'Keccak',
     'MD6',
     'Skein',
-}
+]
 
 class Fun_args:
     def __init__(self, block_size, key_size):
@@ -123,7 +123,7 @@ def generate():
             f.write('    "type" : "pcg32-stream",\n')
             f.write('    "algorithm" : "' + fun + '",\n')
             f.write('    "round" : ' + str(0) + ',\n')
-            f.write('    "block-size" : 128\n')
+            f.write('    "block-size" : 16\n')
             f.write('}\n')
         f.write('}\n')
         f.close()
@@ -185,6 +185,13 @@ if __name__ == '__main__':
     if FLAGS.num_tv == FLAGS.data:
         print('Choose EITHER --num_tv or --data')
         exit(1)
+
+    if FLAGS.fun in estream:
+        FLAGS.stream_type = 'estream'
+    elif FLAGS.fun in sha:
+        FLAGS.stream_type = 'SHA3'
+    elif FLAGS.fun in block:
+        FLAGS.stream_type = 'block'
 
     generate()
     os.system("./generator")
