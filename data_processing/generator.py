@@ -3,17 +3,16 @@
 import os
 import argparse
 
-
 # used funs in batch
 # USE exactly the string from estream_fun_names_id or worry about ID's of funs!
 estream = [
     'Grain',
     'HC-128',
-#   'MICKEY',
+    #   'MICKEY',
     'Rabbit',
     'Salsa20',
     'SOSEMANUK'
-#   ,'Trivium'
+    #   ,'Trivium'
 ]
 
 sha = [
@@ -25,10 +24,12 @@ sha = [
     'Skein',
 ]
 
+
 class Fun_args:
     def __init__(self, block_size, key_size):
         self.block_size = block_size
         self.key_size = key_size
+
 
 block = {
     'TEA': Fun_args(8, 16),
@@ -40,6 +41,7 @@ block = {
 
 FLAGS = None
 
+
 def get_tv_size():
     if FLAGS.stream_type == "estream":
         return 16
@@ -48,6 +50,7 @@ def get_tv_size():
     if FLAGS.stream_type == "block":
         return block[FLAGS.fun].block_size
     return 16
+
 
 def generate():
     fun = FLAGS.fun
@@ -58,7 +61,7 @@ def generate():
 
     if FLAGS.data:
         num = FLAGS.num // tv_size
-    
+
     with open("generator.json", 'w') as f:
 
         f.write(r"""{
@@ -118,7 +121,7 @@ def generate():
     }\n""")
             f.write('}\n')
 
-        else: # rnd
+        else:  # rnd
             f.write('"stream" : {\n')
             f.write('    "type" : "pcg32-stream",\n')
             f.write('    "algorithm" : "' + fun + '",\n')
@@ -136,7 +139,7 @@ if __name__ == '__main__':
         '--stream_type',
         type=str,
         default='',
-        help='Stream: for AES, DES... = block, Salsa... = estream, Keccak... = SHA3'
+        help='Stream: for AES, DES... = block, Salsa... = estream, Keccak... = sha3'
     )
     parser.add_argument(
         '-f',
@@ -158,6 +161,13 @@ if __name__ == '__main__':
         type=str,
         default='ECB',
         help='Mode for data generation, currently only ECB'
+    )
+    parser.add_argument(
+        '-p',
+        '--path_to_generator_binary',
+        type=str,
+        default='./generator',
+        help='Path to the binary of generator (or newly called eacirc_streams binary)'
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -183,16 +193,23 @@ if __name__ == '__main__':
     FLAGS, unparsed = parser.parse_known_args()
 
     if FLAGS.num_tv == FLAGS.data:
-        print('Choose EITHER --num_tv or --data')
-        exit(1)
+        sys.exit('Choose EITHER --num_tv or --data')
 
-    if FLAGS.fun in estream:
-        FLAGS.stream_type = 'estream'
-    elif FLAGS.fun in sha:
-        FLAGS.stream_type = 'SHA3'
-    elif FLAGS.fun in block:
-        FLAGS.stream_type = 'block'
+    if FLAGS.stream_type == '':
+        if FLAGS.fun in estream:
+            FLAGS.stream_type = 'estream'
+        elif FLAGS.fun in sha:
+            FLAGS.stream_type = 'sha3'
+        elif FLAGS.fun in block:
+            FLAGS.stream_type = 'block'
+    else:
+        if FLAGS.fun in estream and FLAGS.stream_type != 'estream':
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from estream and stream_type is ' + FLAGS.stream_type)
+        elif FLAGS.fun in sha and FLAGS.stream_type != 'sha3':
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from sha3 and stream_type is ' + FLAGS.stream_type)
+        elif FLAGS.fun in block and FLAGS.stream_type != 'block':
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from block and stream_type is ' + FLAGS.stream_type)
 
+    print('generator.py: preparing config for function ' + FLAGS.fun + ' from ' + FLAGS.stream_type + ' reduced to ' + FLAGS.rounds + 'rounds.')
     generate()
-    os.system("./generator")
-
+    os.system(FLAGS.path_to_generator_binary)
