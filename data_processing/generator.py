@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import sys
 import argparse
 
 # used funs in batch
@@ -202,14 +203,19 @@ if __name__ == '__main__':
             FLAGS.stream_type = 'sha3'
         elif FLAGS.fun in block:
             FLAGS.stream_type = 'block'
+        else:
+            sys.exit('Unknown function and unspecified stream. Set -s! Function was: ' + FLAGS.fun)
     else:
         if FLAGS.fun in estream and FLAGS.stream_type != 'estream':
-            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from estream and stream_type is ' + FLAGS.stream_type)
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from estream, your stream_type is ' + FLAGS.stream_type)
         elif FLAGS.fun in sha and FLAGS.stream_type != 'sha3':
-            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from sha3 and stream_type is ' + FLAGS.stream_type)
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from sha3, your stream_type is ' + FLAGS.stream_type)
         elif FLAGS.fun in block and FLAGS.stream_type != 'block':
-            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from block and stream_type is ' + FLAGS.stream_type)
+            sys.exit('Mismatch arguments: function ' + FLAGS.fun + ' is from block, your stream_type is ' + FLAGS.stream_type)
 
-    print('generator.py: preparing config for function ' + FLAGS.fun + ' from ' + FLAGS.stream_type + ' reduced to ' + FLAGS.rounds + 'rounds.')
+    if FLAGS.stream_type == 'block' and FLAGS.fun not in block:
+        sys.exit('Unknown block function ' + FLAGS.fun)
+
+    print('generator.py: preparing config for function ' + FLAGS.fun + ' from ' + FLAGS.stream_type + ' reduced to ' + str(FLAGS.rounds) + ' rounds.')
     generate()
     os.system(FLAGS.path_to_generator_binary)
