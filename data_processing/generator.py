@@ -37,7 +37,8 @@ block = {
     'AES': Fun_args(16, 16),
     'RC4': Fun_args(16, 16),
     'SINGLE-DES': Fun_args(8, 8),
-    'TRIPLE-DES': Fun_args(8, 24)
+    'TRIPLE-DES': Fun_args(8, 24),
+    'BLOWFISH':Fun_args(8,32)
 }
 
 FLAGS = None
