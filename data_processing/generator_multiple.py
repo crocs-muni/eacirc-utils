@@ -3,50 +3,94 @@
 import os
 import argparse
 
-
 # used funs in batch
 # USE exactly the string from estream_fun_names_id or worry about ID's of funs!
 estream = {
-    'Grain' : [0,1,2,3,4,13],
-    'HC-128' : [1],
-#   'MICKEY',
-    'Rabbit' : [0,1,2,3,4],
-    'Salsa20' : [1,2,3,4,5,6,8,10,12,20],
-    'SOSEMANUK' : [3,4,5,6,7,8,10,12,25]
-#   ,'Trivium'
+    'Grain': [0, 1, 2, 3, 4, 13],
+    'HC-128': [1],
+    #   'MICKEY',
+    'Rabbit': [0, 1, 2, 3, 4],
+    'Salsa20': [1, 2, 3, 4, 5, 6, 8, 10, 12, 20],
+    'SOSEMANUK': [3, 4, 5, 6, 7, 8, 10, 12, 25]
+    #   ,'Trivium'
 }
 
 sha = {
-    'BLAKE' : [0,1,2,3,4,5,6,8,10,14,16],
-    'Grostl' : [0,1,2,3,4,5,6,8,10,14],
-    'JH' : [5,6,7,8,9,10,12,20,42],
-    'Keccak' : [1,2,3,4,5,6,8,10,12,24],
-    'MD6' : [6,7,8,9,10,11,12,14,20,40,80,104],
-    'Skein' : [2,3,4,5,6,8,12,24,48,72],
+    'BLAKE': [0, 1, 2, 3, 4, 5, 6, 8, 10, 14, 16],
+    'Grostl': [0, 1, 2, 3, 4, 5, 6, 8, 10, 14],
+    'JH': [5, 6, 7, 8, 9, 10, 12, 20, 42],
+    'Keccak': [1, 2, 3, 4, 5, 6, 8, 10, 12, 24],
+    'MD6': [6, 7, 8, 9, 10, 11, 12, 14, 20, 40, 80, 104],
+    'Skein': [2, 3, 4, 5, 6, 8, 12, 24, 48, 72],
 }
 
-class Fun_args:
+
+class FunArgs:
     def __init__(self, block_size, key_size):
         self.block_size = block_size
         self.key_size = key_size
 
+
 block = {
-    'TEA': Fun_args(8, 16),
-    'AES': Fun_args(16, 16),
-    'RC4': Fun_args(16, 16),
-    'SINGLE-DES': Fun_args(8, 8),
-    'TRIPLE-DES': Fun_args(8, 24)
+    'TEA': FunArgs(8, 16),
+    'AES': FunArgs(16, 16),
+    'RC4': FunArgs(16, 16),
+    'SINGLE-DES': FunArgs(8, 8),
+    'TRIPLE-DES': FunArgs(8, 24),
+    'SIMON_32_64': FunArgs(4, 8),
+    'SIMON_48_72': FunArgs(6, 9),
+    'SIMON_48_96': FunArgs(6, 12),
+    'SIMON_64_96': FunArgs(8, 12),
+    'SIMON_64_128': FunArgs(8, 16),
+    'SIMON_96_96': FunArgs(12, 12),
+    'SIMON_96_144': FunArgs(12, 18),
+    'SIMON_128_128': FunArgs(16, 16),
+    'SIMON_128_192': FunArgs(16, 24),
+    'SIMON_128_256': FunArgs(16, 32),
+    'SPECK_32_64': FunArgs(4, 8),
+    'SPECK_48_72': FunArgs(6, 9),
+    'SPECK_48_96': FunArgs(6, 12),
+    'SPECK_64_96': FunArgs(8, 12),
+    'SPECK_64_128': FunArgs(8, 16),
+    'SPECK_96_96': FunArgs(12, 12),
+    'SPECK_96_144': FunArgs(12, 18),
+    'SPECK_128_128': FunArgs(16, 16),
+    'SPECK_128_192': FunArgs(16, 24),
+    'SPECK_128_256': FunArgs(16, 32)
 }
+
+
+def test_r(begin, max_rounds):
+    return list(range(begin, begin + 5)) + [max_rounds]
+
 
 block_r = {
-    'TEA': [2,3,4,5,6,7,8,10,16,32],
-    'AES': [1,2,3,4,5,6,8,10],
+    'TEA': [2, 3, 4, 5, 6, 7, 8, 10, 16, 32],
+    'AES': [1, 2, 3, 4, 5, 6, 8, 10],
     'RC4': [1],
-    'SINGLE-DES': [1,2,3,4,5,6,7,8,10,12,16],
-    'TRIPLE-DES': [1,2,3,4,5,6,7,8,10,12,16]
+    'SINGLE-DES': [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16],
+    'TRIPLE-DES': [1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16],
+    'SIMON_32_64': test_r(2, 8),
+    'SIMON_48_72': test_r(4, 10),
+    'SIMON_48_96': test_r(4, 10),
+    'SIMON_64_96': test_r(5, 11),
+    'SIMON_64_128': test_r(5, 11),
+    'SIMON_96_96': test_r(9, 15),
+    'SIMON_96_144': test_r(9, 15),
+    'SIMON_128_128': test_r(12, 16),
+    'SIMON_128_192': test_r(12, 24),
+    'SIMON_128_256': test_r(12, 32),
+    'SPECK_32_64': test_r(1, 22),
+    'SPECK_48_72': test_r(2, 22),
+    'SPECK_48_96': test_r(3, 23),
+    'SPECK_64_96': test_r(3, 26),
+    'SPECK_64_128': test_r(3, 27),
+    'SPECK_96_96': test_r(4, 28),
+    'SPECK_96_144': test_r(4, 29),
+    'SPECK_128_128': test_r(5, 32),
+    'SPECK_128_192': test_r(5, 33),
+    'SPECK_128_256': test_r(5, 34)
 }
-
-FLAGS = None
 
 
 class Setup:
@@ -67,16 +111,16 @@ def get_tv_size(setup):
     return 16
 
 
-def generate(setup):
+def generate(setup, main_args):
     fun = setup.fun_name
     r = setup.rounds
 
-    num = FLAGS.num
+    num = main_args.num
     tv_size = get_tv_size(setup)
 
-    if FLAGS.data:
-        num = FLAGS.num // tv_size
-    
+    if main_args.data:
+        num = main_args.num // tv_size
+
     with open("generator.json", 'w') as f:
 
         f.write(r"""{
@@ -87,112 +131,119 @@ def generate(setup):
     "tv-count" : """ + str(num) + ',\n')
 
         if setup.stream_type == "estream":
-            f.write('"stream" : {\n')
-            f.write('    "type" : "estream",\n')
-            f.write('    "generator" : "pcg32",\n')
-            f.write('    "init-frequency" : "only-once",\n')
-            f.write('    "algorithm" : "' + fun + '",\n')
-            f.write('    "round" : ' + str(r) + ',\n')
-            f.write('    "block-size" : 16,\n')
-            f.write("""\
-                    "plaintext-type" : {
-                        "type" : "counter"
-                    },\n""")
-            f.write('    "key-size" : 16,\n')
-            f.write('    "key-type" : "random",\n')
-            f.write('    "iv-type" : "zeros"\n')
-            f.write('}')
-
+            estream_conf(f, fun, r)
         elif setup.stream_type == "sha3":
-            f.write('"stream" : {\n')
-            f.write('    "type" : "sha3",\n')
-            f.write('    "block-size" : 32,\n')
-            f.write("""    "source" : {
-        "type" : "counter"
-    },\n""")
-            f.write('    "algorithm" : "' + fun + '",\n')
-            f.write('    "round" : ' + str(r) + ',\n')
-            f.write('    "hash-bitsize" : 256\n')
-            f.write('}\n')
-
+            sha3_conf(f, fun, r)
         elif setup.stream_type == "block":
-            f.write('"stream" : {\n')
-            f.write('    "type" : "block",\n')
-            f.write('    "generator" : "pcg32",\n')
-            f.write('    "init-frequency" : "only-once",\n')
-            f.write('    "algorithm" : "' + fun + '",\n')
-            f.write('    "round" : ' + str(r) + ',\n')
-            f.write('    "block-size" : ' + str(block[fun].block_size) + ',\n')
-            f.write("""    "plaintext" : {
-        "type" : "counter"
-    },\n""")
-            f.write('    "key-size" : ' + str(block[fun].key_size) + ',\n')
-            f.write("""    "key" : {
-        "type" : "pcg32-stream"
-    },\n""")
-            f.write('    "mode" : "' + setup.mode + '",\n')
-            f.write("""    "iv" : {
-        "type" : "false-stream"
-    }\n""")
-            f.write('}\n')
+            block_conf(f, fun, r, setup)
+        else:  # rnd
+            rnd_conf(f, fun)
 
-        else: # rnd
-            f.write('"stream" : {\n')
-            f.write('    "type" : "pcg32-stream",\n')
-            f.write('    "algorithm" : "' + fun + '",\n')
-            f.write('    "round" : ' + str(0) + ',\n')
-            f.write('    "block-size" : 16\n')
-            f.write('}\n')
         f.write('}\n')
         f.close()
 
 
-def generate_all():
+def rnd_conf(f, fun):
+    f.write('"stream" : {\n')
+    f.write('    "type" : "pcg32-stream",\n')
+    f.write('    "algorithm" : "' + fun + '",\n')
+    f.write('    "round" : ' + str(0) + ',\n')
+    f.write('    "block-size" : 16\n')
+    f.write('}\n')
+
+
+def block_conf(f, fun, r, setup):
+    f.write('"stream" : {\n')
+    f.write('    "type" : "block",\n')
+    f.write('    "generator" : "pcg32",\n')
+    f.write('    "init-frequency" : "only-once",\n')
+    f.write('    "algorithm" : "' + fun.split('_')[0] + '",\n')
+    f.write('    "round" : ' + str(r) + ',\n')
+    f.write('    "block-size" : ' + str(block[fun].block_size) + ',\n')
+    f.write("""    "plaintext" : {
+        "type" : "counter"
+    },\n""")
+    f.write('    "key-size" : ' + str(block[fun].key_size) + ',\n')
+    f.write("""    "key" : {
+        "type" : "pcg32-stream"
+    },\n""")
+    f.write('    "mode" : "' + setup.mode + '",\n')
+    f.write("""    "iv" : {
+        "type" : "false-stream"
+    }\n""")
+    f.write('}\n')
+
+
+def sha3_conf(f, fun, r):
+    f.write('"stream" : {\n')
+    f.write('    "type" : "sha3",\n')
+    f.write('    "block-size" : 32,\n')
+    f.write("""    "source" : {
+        "type" : "counter"
+    },\n""")
+    f.write('    "algorithm" : "' + fun + '",\n')
+    f.write('    "round" : ' + str(r) + ',\n')
+    f.write('    "hash-bitsize" : 256\n')
+    f.write('}\n')
+
+
+def estream_conf(f, fun, r):
+    f.write('"stream" : {\n')
+    f.write('    "type" : "estream",\n')
+    f.write('    "generator" : "pcg32",\n')
+    f.write('    "init-frequency" : "only-once",\n')
+    f.write('    "algorithm" : "' + fun + '",\n')
+    f.write('    "round" : ' + str(r) + ',\n')
+    f.write('    "block-size" : 16,\n')
+    f.write("""\
+                    "plaintext-type" : {
+                        "type" : "counter"
+                    },\n""")
+    f.write('    "key-size" : 16,\n')
+    f.write('    "key-type" : "random",\n')
+    f.write('    "iv-type" : "zeros"\n')
+    f.write('}')
+
+
+def compress(file_name):
+    cmd = 'gzip --best <' + file_name + ' > ' + file_name + '.gz'
+    os.system(cmd)
+    cmd = 'bzip2 --best <' + file_name + ' > ' + file_name + '.bzip2'
+    os.system(cmd)
+    cmd = 'zip -9 <' + file_name + ' > ' + file_name + '.zip'
+    os.system(cmd)
+    cmd = 'lzop -9 <' + file_name + ' > ' + file_name + '.lzop'
+    os.system(cmd)
+
+
+def generate_all(main_args):
+    use_compression = False
     for e_fun in estream:
         for rounds in estream[e_fun]:
             setup = Setup('estream', e_fun, rounds)
-            generate(setup)
+            generate(setup, main_args)
             os.system('./eacirc-streams')
             file_name = '{}_r{}_b{}.bin'.format(setup.fun_name, rounds, get_tv_size(setup))
-            cmd = 'gzip --best <' + file_name + ' > ' + file_name + '.gz'
-            os.system(cmd)
-            cmd = 'bzip2 --best <' + file_name + ' > ' + file_name + '.bzip2'
-            os.system(cmd)
-            cmd = 'zip -9 <' + file_name + ' > ' + file_name + '.zip'
-            os.system(cmd)
-            cmd = 'lzop -9 <' + file_name + ' > ' + file_name + '.lzop'
-            os.system(cmd)
-
+            if use_compression:
+                compress(file_name)
 
     for s_fun in sha:
         for rounds in sha[s_fun]:
             setup = Setup('sha3', s_fun, rounds)
-            generate(setup)
+            generate(setup, main_args)
             os.system('./eacirc-streams')
             file_name = '{}_r{}_b{}.bin'.format(setup.fun_name, rounds, get_tv_size(setup))
-            cmd = 'gzip --best <' + file_name + ' > ' + file_name + '.gz'
-            os.system(cmd)
-            cmd = 'bzip2 --best <' + file_name + ' > ' + file_name + '.bzip2'
-            os.system(cmd)
-            cmd = 'zip -9 <' + file_name + ' > ' + file_name + '.zip'
-            os.system(cmd)
-            cmd = 'lzop -9 <' + file_name + ' > ' + file_name + '.lzop'
-            os.system(cmd)
+            if use_compression:
+                compress(file_name)
 
     for b_fun in block:
         for rounds in block_r[b_fun]:
             setup = Setup('block', b_fun, rounds)
-            generate(setup)
+            generate(setup, main_args)
             os.system('./eacirc-streams')
             file_name = '{}_r{}_b{}.bin'.format(setup.fun_name, rounds, get_tv_size(setup))
-            cmd = 'gzip --best <' + file_name + ' > ' + file_name + '.gz'
-            os.system(cmd)
-            cmd = 'bzip2 --best <' + file_name + ' > ' + file_name + '.bzip2'
-            os.system(cmd)
-            cmd = 'zip -9 <' + file_name + ' > ' + file_name + '.zip'
-            os.system(cmd)
-            cmd = 'lzop -9 <' + file_name + ' > ' + file_name + '.lzop'
-            os.system(cmd)
+            if use_compression:
+                compress(file_name)
 
 
 if __name__ == '__main__':
@@ -217,12 +268,12 @@ if __name__ == '__main__':
         metavar='N',
         type=int,
         default=1000000,
-        help='the number of TV or data')
-    FLAGS, unparsed = parser.parse_known_args()
+        help='the number of TV or data'
+    )
+    main_args, unparsed = parser.parse_known_args()
 
-    if FLAGS.num_tv == FLAGS.data:
+    if main_args.num_tv == main_args.data:
         print('Choose EITHER --num_tv or --data')
         exit(1)
 
-    generate_all()
-
+    generate_all(main_args)
