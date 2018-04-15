@@ -25,9 +25,7 @@ RUN cd /home/eacuser
 # clone all EAC repositories
 
 RUN git clone https://github.com/crocs-muni/eacirc --recursive
-RUN git clone https://github.com/crocs-muni/eacirc --branch=dev --recursive eacirc-dev
-RUN git clone https://github.com/crocs-muni/eacirc-streams --recursive
-RUN git clone https://github.com/crocs-muni/eacirc-streams --branch=dev --recursive eacirc-streams-dev
+RUN git clone https://github.com/crocs-muni/CryptoStreams --recursive
 RUN git clone https://github.com/crocs-muni/eacirc-utils
 
 # run entrypoint with build steps

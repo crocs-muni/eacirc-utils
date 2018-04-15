@@ -8,7 +8,7 @@ export CC=gcc
 gcc --version
 g++ --version
 
-for dir_name in eacirc eacirc-dev eacirc-streams eacirc-streams-dev
+for dir_name in eacirc CryptoStreams
 do
     cd $dir_name
     mkdir -p build && cd build
