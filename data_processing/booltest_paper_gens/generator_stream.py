@@ -21,17 +21,17 @@ counter_stream = {
     'type': 'counter'
 }
 hw_stream = {
-    'type': 'hw-counter',
+    'type': 'hw_counter',
     'hw': 4
 }
 random_stream = {
-    'type': 'pcg32-stream'
+    'type': 'pcg32_stream'
 }
 false_stream = {
-    'type': 'false-stream'
+    'type': 'false_stream'
 }
 rnd_plt_ctx_stream = {
-    'type': 'rnd-plt-ctx-stream',
+    'type': 'rnd_plt_ctx_stream',
     'source': None
 }
 sac_stream = {
@@ -41,162 +41,107 @@ plaintext_target_stream = false_stream
 
 
 class FunArgs:
-    def __init__(self, block_size, key_size, rounds=()):
+    def __init__(self, block_size, key_size, iv_size=None, rounds=()):
         self.block_size = block_size
         self.key_size = key_size
+        self.iv_size = iv_size
         self.rounds = rounds
 
+
 # used funs in batch
-estream_funs = {
-    'Grain': (0, 1, 2, 3),
-    # 'HC-128': (1,),
-    # 'MICKEY': (),
-    # 'Rabbit': (0, 4),
-    'Salsa20': (2, 4, 6),
-    'Chacha': (1,2,3,4),
-    # 'SOSEMANUK': (3, 4, 5, 6),
-    # 'Trivium': (),
-    'F-FCSR': (1,2,3,4,5,6),
+stream_cipher_funs = {
+    'Grain': FunArgs(16, 16, 12, (0, 1, 2, 3)),
+    # 'HC-128': FunArgs(16, 16, 16, (1,)),
+    # 'MICKEY': FunArgs(16, 16, 16, ()),
+    # 'Rabbit': FunArgs(16, 16, 8, (0, 4)),
+    'Salsa20': FunArgs(8, 16, 8, (2, 4, 6)),
+    # 'SOSEMANUK': FunArgs(16, 16, 16, (3, 4, 5, 6)),
+    # 'Trivium': FunArgs(8, 10, 10, (1, 2, 3, 4, 5)),
+    'F-FCSR': FunArgs(16, 16, 8, (1, 2, 3, 4, 5, 6)),
+    'Chacha': FunArgs(32, 32, 8, (1, 2, 3, 4)),
+    'RC4': FunArgs(16, 16, 0, (1,)),
 }
-estream_default = {
-    'type': 'estream',
+stream_cipher_default = {
+    'type': 'stream_cipher',
     'generator': 'pcg32',
-    'init-frequency': 'only-once',
     'algorithm': None,
     'round': None,
-    'block-size': 16,
-    'plaintext-type': plaintext_target_stream,
-    'key-size': 16,
-    'key-type': random_stream,
-    'iv-size': 16,
-    'iv-type': false_stream
+    'block_size': None,
+    'plaintext': plaintext_target_stream,
+    'key_size': None,
+    'key': random_stream,
+    'iv_size': None,
+    'iv': false_stream
 }
 
-hash_funs = {
-    # 'BLAKE': (0, 1, 2, 3),
-    # 'Grostl': (3, 4, 5, 6, 7, 8),
-    # 'JH': (5, 6, 7, 8),
-    # 'Keccak': (1, 2, 3, 4),
-    # 'MD6': (1, 2, 3, 4, 5),
-    # 'Skein': (1, 2, 3, 4)
-}
+hash_funs = { }
 hash_default = {
-    'type': 'sha3',
-    'generator': 'pcg32',
-    'init-frequency': 'only-once',
-    'algorithm': None,
-    'round': None,
-    'block-size': 32,  # bug
-    'hash-size': 32,
-    'input-size': 32,
-    'source': plaintext_target_stream
-}
-
-# ph4 hotfix
-hash2_funs = {
-    # 'Gost': FunArgs(32, None, (1, 2, 3)),
-    # 'MD5': FunArgs(16, None, (6, 7, 8, 9, 10, 11)),
-    # 'RIPEMD160': FunArgs(20, None, (5, 6, 7, 8, 9, 10)),
-    # 'SHA1': FunArgs(20, None, (9, 10, 11, 12, 13, 14)),
-    # 'SHA256': FunArgs(32, None, (4, 5, 6, 7)),
-    # 'Tiger': FunArgs(24, None, (1, 2)),
-    # 'Whirlpool': FunArgs(64, None, (2, 4)),
-}
-hash2_default = {
     'type': 'hash',
     'generator': 'pcg32',
-    'init-frequency': 'only-once',
     'algorithm': None,
     'round': None,
-    'block-size': None,  # bug
-    'hash-size': None,
-    'input-size': None,
+    'hash_size': None,
+    'input_size': None,
     'source': plaintext_target_stream
 }
 
 
-block_funs = {
-    # 'AES': FunArgs(16, 16, (1, 2, 3, 4)),
-    # 'BLOWFISH': FunArgs(8, 32, (1, 2, 3, 4)),
-    # 'MARS': FunArgs(16, 16, (0, 1)),
-    # 'TWOFISH': FunArgs(16, 16, (1, 2, 3, 4)),
-    # 'SERPENT': FunArgs(16, 16, (1, 2, 3, 4)),
-    # 'RC6': FunArgs(16, 16, (2, 3, 4, 5)),
-    'RC4': FunArgs(16, 16, (1,)),
-    # 'SIMON': FunArgs(16, 16, (12, 13, 14, 15, 16, 17)),
-    # 'SPECK': FunArgs(16, 16, (4, 5, 6, 7, 8, 9)),
-    # 'SINGLE-DES': FunArgs(8, 8, (2, 3, 4, 5)),
-    # 'TRIPLE-DES': FunArgs(8, 24, (1, 2, 3)),
-    # 'TEA': FunArgs(8, 16, (2, 3, 4, 5)),
-    # 'GOST': FunArgs(8, 32, (4, 5, 6, 7, 8, 9)),
-}
+block_funs = { }
 block_default = {
     'type': 'block',
-    'init-frequency': 'only-once',
+    'init_frequency': 'only_once',
     'algorithm': None,
     'round': None,
-    'block-size': 16,
+    'block_size': 16,
     'plaintext': plaintext_target_stream,
-    'key-size': 16,
+    'key_size': 16,
     'key': random_stream,
-    'iv-size': 16,
+    'iv_size': 16,
     'iv': false_stream
 }
 
 
-def get_tv_size(main_args):
-    if main_args.stream_type == "estream":
-        return 16
-    if main_args.stream_type == "sha3":
-        return 32
-    if main_args.stream_type == "block":
-        return block[main_args.fun].block_size
-    return 16
-
-
 def prepare_cfg(project, fun, rounds, tv_size, tv_num):
     cfg_name = '{}_r{:02d}_b{}.json'.format(fun, rounds, tv_size)
+    bin_name = '{}_r{:02d}_b{}.bin'.format(fun, rounds, tv_size)
 
     with open(cfg_name, 'w') as f:
 
         current_cfg = deepcopy(config_base)
-        current_cfg['tv-size'] = tv_size
-        current_cfg['tv-count'] = tv_num
+        current_cfg['tv_size'] = tv_size
+        current_cfg['tv_count'] = tv_num
+        current_cfg['file_name'] = bin_name
 
-        if project == "estream":
-            stream = deepcopy(estream_default)
+        if project == "stream_cipher":
+            stream = deepcopy(stream_cipher_default)
             stream['algorithm'] = fun
             stream['round'] = rounds
-            current_cfg['stream'] = stream
-
-        elif project == "sha3":
-            stream = deepcopy(hash_default)
-            stream['algorithm'] = fun
-            stream['round'] = rounds
+            stream['block_size'] = stream_cipher_funs[fun].block_size
+            stream['key_size'] = stream_cipher_funs[fun].key_size
+            stream['iv_size'] = stream_cipher_funs[fun].iv_size
             current_cfg['stream'] = stream
 
         elif project == "hash":
-            stream = deepcopy(hash2_default)
+            stream = deepcopy(hash_default)
             stream['algorithm'] = fun
             stream['round'] = rounds
-            stream['block-size'] = hash2_funs[fun].block_size
-            stream['hash-size'] = hash2_funs[fun].block_size
-            stream['input-size'] = hash2_funs[fun].block_size
+            stream['hash_size'] = hash_funs[fun].block_size
+            stream['input_size'] = hash_funs[fun].block_size
             current_cfg['stream'] = stream
 
         elif project == "block":
             stream = deepcopy(block_default)
             stream['algorithm'] = fun
             stream['round'] = rounds
-            stream['block-size'] = block_funs[fun].block_size
-            stream['key-size'] = block_funs[fun].key_size
+            stream['block_size'] = block_funs[fun].block_size
+            stream['key_size'] = block_funs[fun].key_size
             current_cfg['stream'] = stream
 
         else:  # rnd
             stream = deepcopy(random_stream)
             stream['algorithm'] = fun
             stream['round'] = 0
-            stream['block-size'] = 16
+            stream['block_size'] = 16
             current_cfg['stream'] = stream
 
         f.write(json.dumps(current_cfg))
@@ -214,15 +159,17 @@ def run_single(args):
     process.wait()
     binfile_name = cfg_name.split('.')[0] + '.bin'
 
-    cfg_size = ['1MB.json', '10MB.json', '100MB.json', 'default-8GB.json']
+    cfg_size = ['1MB.json', '10MB.json', '100MB.json', '1000MB.json', 'default-8GB.json']
     if 1000000 <= data < 10000000:
         cfg = cfg_size[0]
     elif 10000000 <= data < 100000000:
         cfg = cfg_size[1]
-    elif 100000000 <= data < 8000000000:
+    elif 100000000 <= data < 1000000000:
         cfg = cfg_size[2]
-    elif 8000000000 <= data:
+    elif 1000000000 <= data < 8000000000:
         cfg = cfg_size[3]
+    elif 8000000000 <= data:
+        cfg = cfg_size[4]
     else:
         exit("Too small data for testing.")
         return None
@@ -237,41 +184,36 @@ def run_single(args):
 
 
 def single_setup_generator(generator_binary, data=None, num_tv=None):
-    for estream_fun in estream_funs:
-        for rounds in estream_funs[estream_fun]:
-            if data:
-                num_tv = data // 16
-            else:
-                data = num_tv * 16
-            yield ['estream', estream_fun, rounds, 16, data, num_tv, generator_binary]
-    for hash_fun in hash_funs:
-        for rounds in hash_funs[hash_fun]:
-            if data:
-                num_tv = data // 32
-            else:
-                data = num_tv * 32
-            yield ['sha3', hash_fun, rounds, 32, data, num_tv, generator_binary]
-    for hash2_fun in hash2_funs:
-        args = hash2_funs[hash2_fun]
-        for rounds in args.rounds:
-            if data:
-                num_tv = data // args.block_size
-            else:
-                data = num_tv * args.block_size
-            yield ['hash', hash2_fun, rounds, args.block_size, data, num_tv, generator_binary]
-    for block_fun in block_funs:
-        args = block_funs[block_fun]
-        for rounds in args.rounds:
-            if data:
-                num_tv = data // args.block_size
-            else:
-                data = num_tv * args.block_size
-            yield ['block', block_fun, rounds, args.block_size, data, num_tv, generator_binary]
+    def _yield_single_setup(funs, project):
+        for fun in funs:
+            args = funs[fun]
+            for rounds_count in args.rounds:
+                if data:
+                    data_out = data
+                    num_tv_out = data // args.block_size
+                else:
+                    data_out = num_tv * args.block_size
+                    num_tv_out = num_tv
+                yield [project, fun, rounds_count, args.block_size, data_out, num_tv_out, generator_binary]
+
+    yield from _yield_single_setup(stream_cipher_funs, 'stream_cipher')
+    yield from _yield_single_setup(hash_funs, 'hash')
+    yield from _yield_single_setup(block_funs, 'block')
 
 
 def run_all(binary, data=None, num_tv=None):
     Parallel(n_jobs=-1)(delayed(run_single)(single_setup)
                         for single_setup in single_setup_generator(binary, data, num_tv))
+
+
+def get_tv_size(main_args):
+    if main_args.stream_type == "stream_cipher":
+        return stream_cipher_funs[main_args.fun].block_size
+    if main_args.stream_type == "hash":
+        return hash_funs[main_args.fun].block_size
+    if main_args.stream_type == "block":
+        return block[main_args.fun].block_size
+    return 16
 
 
 def main_args_to_fnc(main_args):
@@ -341,32 +283,30 @@ def main():
 
 def single_execution_parse(main_args):
     if main_args.stream_type == '':
-        if main_args.fun in estream:
-            main_args.stream_type = 'estream'
-        elif main_args.fun in sha:
-            main_args.stream_type = 'sha3'
-        elif main_args.fun in block:
+        if main_args.fun in stream_cipher_funs:
+            main_args.stream_type = 'stream_cipher'
+        elif main_args.fun in hash_funs:
+            main_args.stream_type = 'hash'
+        elif main_args.fun in block_funs:
             main_args.stream_type = 'block'
         else:
             sys.exit('Unknown function and unspecified stream. Set -s! Function was: ' + main_args.fun)
     else:
-        if main_args.fun in estream and main_args.stream_type != 'estream':
+        if main_args.fun in stream_cipher_funs and main_args.stream_type != 'stream-cipher':
             sys.exit('Mismatch arguments: function '
                      + main_args.fun
-                     + ' is from estream, your stream_type is '
+                     + ' is from stream-cipher, your stream_type is '
                      + main_args.stream_type)
-        elif main_args.fun in sha and main_args.stream_type != 'sha3':
+        elif main_args.fun in hash_funs and main_args.stream_type != 'hash':
             sys.exit('Mismatch arguments: function '
                      + main_args.fun
-                     + ' is from sha3, your stream_type is '
+                     + ' is from hash, your stream_type is '
                      + main_args.stream_type)
-        elif main_args.fun in block and main_args.stream_type != 'block':
+        elif main_args.fun in block_funs and main_args.stream_type != 'block':
             sys.exit('Mismatch arguments: function '
                      + main_args.fun
                      + ' is from block, your stream_type is '
                      + main_args.stream_type)
-    if main_args.stream_type == 'block' and main_args.fun not in block:
-        sys.exit('Unknown block function ' + main_args.fun)
     print('generator.py: preparing config for function '
           + main_args.fun
           + ' from '
@@ -382,7 +322,7 @@ def single_execution_args(parser):
         '--stream_type',
         type=str,
         default='',
-        help='Stream: for AES, DES... = block, Salsa... = estream, Keccak... = sha3'
+        help='Stream: for AES, DES... = block, Salsa... = stream-cipher, Keccak... = hash'
     )
     parser.add_argument(
         '-f',
