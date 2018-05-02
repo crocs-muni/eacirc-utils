@@ -169,7 +169,7 @@ def prepare_cfg(project, fun, rounds, tv_size, tv_num):
             tmp = deepcopy(hw_stream)
             if block_funs[fun].block_size in [7, 8]:
                 tmp['hw'] = 6
-            stream['source'] = tmp
+            stream['plaintext-type'] = tmp
             current_cfg['stream'] = stream
 
         else:  # rnd
