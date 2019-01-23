@@ -23,7 +23,8 @@ class GlobalConfigs:
 
 
 class ExperimentGenerator:
-    rtt_submit_experiment_path = '/usr/local/sbin/'
+    #rtt_submit_experiment_path = '/usr/local/sbin/'
+    rtt_submit_experiment_path = ''
     rtt_configs_path = '../sample_configs/'
 
     # commands required to submit experiments to RTT are stored into single file (in case of rerun needed)
@@ -73,31 +74,33 @@ class ExperimentGenerator:
         print("Processing: " + cfg_name)
         cmd = '{} -c={}'.format(generator_binary, cfg_name)
 
-        print("  " + cmd)
         if self.global_cfg.shall_run_cryptostreams:
             print("Executing: " + cmd)
             process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             process.wait()
+        else:
+            print("  " + cmd)
 
         binfile_name = cfg_name.split('.')[0] + '.bin'
 
-        cmd = '{0}submit_experiment --all_batteries -c {4}{1} -f {2} -n {3}{2}'.format(self.rtt_submit_experiment_path,
+        cmd = '{0}submit_experiment --all_batteries -c {3}{1} -f {2} -n {2}'.format(self.rtt_submit_experiment_path,
                                                                                        cfg, binfile_name,
-                                                                                       rtt_prefix,
                                                                                        self.rtt_configs_path)
         self.rtt_submit_script_file.write("{0}\n".format(cmd))
-        print("  " + cmd)
         if self.global_cfg.shall_submit_experiment:
             print("Executing: " + cmd)
             process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             process.wait()
+        else:
+            print("  " + cmd)
 
         cmd = 'rm {0}'.format(binfile_name)
-        print("  " + cmd)
         if self.global_cfg.shall_remove_bins:
             print("Executing: " + cmd)
             process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
             process.wait()
+        else:
+            print("  " + cmd)
 
     def single_setup_generator(self, generator_binary, data=None, num_tv=None):
         def _yield_single_setup(funs, project):
