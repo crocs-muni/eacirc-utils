@@ -104,7 +104,7 @@ class ExperimentGenerator:
 
     def single_setup_generator(self, generator_binary, data=None, num_tv=None):
         def _yield_single_setup(funs, project):
-            for fun in funs:
+            for fun in sorted(funs.keys()):
                 args = funs[fun]
                 for rounds_count in args.rounds:
                     if data:
@@ -163,6 +163,13 @@ class ExperimentGenerator:
             default='./generator',
             help='Path to the binary of generator (or newly called eacirc_streams binary)'
         )
+        parser.add_argument(
+            '-en',
+            '--experiment_name',
+            type=str,
+            default='EXPUNSET',
+            help='Human-readable prefix name for an experiment'
+        )
         group = parser.add_mutually_exclusive_group()
         group.add_argument(
             '-n',
@@ -188,6 +195,8 @@ class ExperimentGenerator:
 
         if main_args.num_tv == main_args.data:
             sys.exit('Choose EITHER --num_tv or --data')
+
+        self.global_cfg.rtt_paper_prefix = main_args.experiment_name
 
         if main_args.all:
             print('Running all experiments')
@@ -265,10 +274,10 @@ class ExperimentGenerator:
 
 def main():
     #data_lengths = [10000000, 100000000, 8000000000]
-    data_lengths = [10000000, 100000000]
+    #data_lengths = [10000000, 100000000]
+    data_lengths = [8000000000]
     for data_len in data_lengths:
         global_cfg = GlobalConfigs()
-        global_cfg.rtt_paper_prefix = 'SECMARGINPAPER1'
         global_cfg.data_length = data_len
         ExperimentGenerator(GeneratorCfgCtr(), global_cfg).run()
         ExperimentGenerator(GeneratorCfgHW(), global_cfg).run()
